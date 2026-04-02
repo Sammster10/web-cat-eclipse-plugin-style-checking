@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<ruleset name="Empty Code Rules (JavaTddPlugin version)"
+    xmlns="http://pmd.sf.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+  <description>
+    The Empty Code Ruleset contains rules that find empty statements of any
+    kind (empty method, empty block statement, empty try or catch block,...).
+    This version of the ruleset includes alternate messages from the main PMD
+    rulesets/java/empty.xml ruleset.
+  </description>
+
+  <rule ref="category/java/errorprone.xml/EmptyCatchBlock"
+    message="The body of this catch block is empty, so the caught
+    exception will be thrown away with no action.  If this is what
+    you intend, please provide an appropriate comment inside the
+    braces.">
+    <properties>
+        <property name="allowCommentedBlocks" value="true"/>
+    </properties>
+  </rule>
+
+  <rule ref="category/java/codestyle.xml/EmptyControlStatement"
+    message="The body of this control statement is empty.
+    Add statements to the body or remove the control statement entirely."/>
+
+  <!-- Checkstyle handles this, since it also flags loop usage
+  <rule ref="rulesets/java/empty.xml/EmptyStatementNotInLoop"
+    message="A semicolon (;) on its own line or extra semicolons at
+    the end of a line represent empty statements. Empty statements are
+    unnecessary and should be removed."/>
+  -->
+
+</ruleset>

@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ruleset name="Virginia Tech Rules"
+         xmlns="https://pmd.sourceforge.io/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://pmd.sourceforge.io/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+  <description>
+    Contains custom PMD rules written at Virginia Tech, mostly
+    regarding JUnit tests.
+  </description>
+
+    <rule name="JUnit3ConstantAssertion"
+          language="java"
+          message="This assertion uses only values known at compile time, so
+          it cannot test any useful behavior exhibited by your code at
+          run-time."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule"
+      externalInfoURL="http://web-cat.cs.vt.edu/WCWiki/PmdRules/VtRules#JUnitConstantAssertion">
+      <description>
+      All assertEquals() or assertTrue() assertions in JUnit test methods
+      should contain one or more non-literal parameters.
+      </description>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//MethodCall[
+  @MethodName=('assertTrue', 'assertFalse', 'assertNotNull', 'assertNull', 'assertNotSame', 'assertSame', 'assertThat', 'assertEquals')]
+  [not(ArgumentList//VariableAccess or ArgumentList//FieldAccess or ArgumentList//MethodCall or ArgumentList//ThisExpression)]
+  [ancestor::ClassDeclaration[ExtendsList/ClassType[ends-with(@SimpleName, 'TestCase')]]]
+]]>
+                </value>
+            </property>
+        </properties>
+        <priority>2</priority>
+
+      <example>
+  <![CDATA[
+  import junit.framework.*;
+  public class Foo extends TestCase {
+   public void test1() {
+       assertTrue( true );    // oops, does not test anything useful!
+       assertEquals( 0, 0 );  // oops, does not test anything useful!
+   }
+  }
+  ]]>
+      </example>
+      </rule>
+
+    <rule name="JUnit4ConstantAssertion"
+          language="java"
+          message="This assertion uses only values known at compile time, so
+          it cannot test any useful behavior exhibited by your code at
+          run-time."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule"
+      externalInfoURL="http://web-cat.cs.vt.edu/WCWiki/PmdRules/VtRules#JUnitConstantAssertion">
+      <description>
+      All assertEquals() or assertTrue() assertions in JUnit 4.x test methods
+      should contain one or more non-literal parameters.
+      </description>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//MethodCall[
+  @MethodName=('assertTrue', 'assertFalse', 'assertNotNull', 'assertNull', 'assertNotSame', 'assertSame', 'assertThat', 'assertEquals')]
+  [not(ArgumentList//VariableAccess or ArgumentList//FieldAccess or ArgumentList//MethodCall or ArgumentList//ThisExpression)]
+  [ancestor::MethodDeclaration[ModifierList/Annotation[ends-with(@SimpleName, 'Test')]]]
+]]>
+                </value>
+            </property>
+        </properties>
+        <priority>2</priority>
+
+      <example>
+  <![CDATA[
+  import org.junit.*;
+  public class Foo {
+   @Test
+   public void test1() {
+       assertTrue( true );    // oops, does not test anything useful!
+       assertEquals( 0, 0 );  // oops, does not test anything useful!
+   }
+  }
+  ]]>
+      </example>
+      </rule>
+
+    <rule name="AssertJAssertion"
+          language="java"
+          message="This assertThat() is missing a chained method defining
+          the expectation, so
+          it cannot test any useful behavior exhibited by your code at
+          run-time."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule"
+      externalInfoURL="http://web-cat.cs.vt.edu/WCWiki/PmdRules/VtRules#AssertJAssertion">
+      <description>
+      All assertThat() assertions in JUnit test methods
+      should contain one or more chained method calls defining the
+      expected behavior, such as .isEqualTo(), .isTrue(), isFalse(), etc.
+      </description>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//MethodCall[@MethodName='assertThat'][not(parent::MethodCall)]
+]]>
+                </value>
+            </property>
+        </properties>
+        <priority>2</priority>
+
+      <example>
+  <![CDATA[
+  import junit.framework.*;
+  public class Foo extends TestCase {
+   public void test1() {
+       assertThat( "any value" );    // oops, does not test anything useful!
+   }
+  }
+  ]]>
+      </example>
+      </rule>
+
+    <rule name="FormalParametersNeedMeaningfulNames"
+          language="java"
+          message="A formal parameter has been left with its auto-generated
+          default name instead of a more meaningful name."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule"
+        externalInfoURL="http://web-cat.cs.vt.edu/WCWiki/PmdRules/VtRules#FormalParametersNeedMeaningfulNames">
+        <description>
+        When using a development environment that can auto-generate empty
+        method definitions, you should change the auto-generated formal
+        parameter names to something more meaningful.
+        </description>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//FormalParameter/VariableId[matches(@Name, '^arg[0-9]+$')]
+]]>
+                </value>
+            </property>
+        </properties>
+        <priority>2</priority>
+
+      <example>
+  <![CDATA[
+  public class FooClass
+  {
+      public void foo(int arg0, String arg1)
+      {
+      }
+  }
+  ]]>
+      </example>
+    </rule>
+
+    <rule name="ProhibitedGreenfootImport"
+          language="java"
+          message="Do not import greenfoot.* packages or classes, since
+          they are not available under Android."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule"
+        externalInfoURL="http://web-cat.cs.vt.edu/WCWiki/PmdRules/VtRules#ProhibitedGreenfootImport">
+        <description>
+        When using Greenfoot4Sofia, do not import any greenfoot.* packages
+        or classes, since these are not intended for use by user projects
+        and are completely unavailable under Android.
+        </description>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//ImportDeclaration[starts-with(@ImportedName, 'greenfoot.')]
+  [ancestor::CompilationUnit//ImportDeclaration[starts-with(@ImportedName, 'sofia.') or @ImportedName='sofia']]
+]]>
+                </value>
+            </property>
+        </properties>
+        <priority>2</priority>
+
+      <example>
+  <![CDATA[
+  import greenfoot.sofiainternal.*;
+  import sofia.*;
+  public class FooClass
+  {
+      // ...
+  }
+  ]]>
+      </example>
+    </rule>
+
+</ruleset>

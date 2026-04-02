@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component jdk="JavaSE-21" jdk_type="JavaSDK">
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="asm-9.9.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/asm-9.9.1.jar!/"/>
+	</lib>
+	<lib name="checker-compat-qual-2.5.3.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/checker-compat-qual-2.5.3.jar!/"/>
+	</lib>
+	<lib name="checker-qual-3.53.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/checker-qual-3.53.0.jar!/"/>
+	</lib>
+	<lib name="commons-lang3-3.20.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/commons-lang3-3.20.0.jar!/"/>
+	</lib>
+	<lib name="error_prone_annotations-2.41.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/error_prone_annotations-2.41.0.jar!/"/>
+	</lib>
+	<lib name="failureaccess-1.0.3.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/failureaccess-1.0.3.jar!/"/>
+	</lib>
+	<lib name="gson-2.13.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/gson-2.13.2.jar!/"/>
+	</lib>
+	<lib name="guava-33.5.0-jre.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/guava-33.5.0-jre.jar!/"/>
+	</lib>
+	<lib name="j2objc-annotations-3.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/j2objc-annotations-3.1.jar!/"/>
+	</lib>
+	<lib name="jspecify-1.0.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/jspecify-1.0.0.jar!/"/>
+	</lib>
+	<lib name="jsr305-3.0.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/jsr305-3.0.2.jar!/"/>
+	</lib>
+	<lib name="nice-xml-messages-3.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/nice-xml-messages-3.1.jar!/"/>
+	</lib>
+	<lib name="pcollections-4.0.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/pcollections-4.0.2.jar!/"/>
+	</lib>
+	<lib name="pmd-core-7.21.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/pmd-core-7.21.0.jar!/"/>
+	</lib>
+	<lib name="pmd-java-7.21.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/pmd-java-7.21.0.jar!/"/>
+	</lib>
+	<lib name="Saxon-HE-12.9.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/Saxon-HE-12.9.jar!/"/>
+	</lib>
+	<lib name="slf4j-api-1.7.36.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/slf4j-api-1.7.36.jar!/"/>
+	</lib>
+	<lib name="slf4j-simple-1.7.36.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/slf4j-simple-1.7.36.jar!/"/>
+	</lib>
+	<lib name="xmlresolver-5.3.3.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/xmlresolver-5.3.3.jar!/"/>
+	</lib>
+	<lib name="checkstyle-10.7.0-all.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/checkstyle/checkstyle-10.7.0-all.jar!/"/>
+	</lib>
+</component>

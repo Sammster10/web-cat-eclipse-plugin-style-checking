@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+    <extension point="org.eclipse.ui.startup">
+        <startup class="webcat.stylechecking.EarlyStartup"/>
+    </extension>
+
+    <extension point="org.eclipse.ui.commands">
+        <command
+                id="webcat.stylechecking.runStyleChecks"
+                name="Run Style Checks"/>
+    </extension>
+
+    <extension point="org.eclipse.ui.handlers">
+        <handler
+                class="webcat.stylechecking.handlers.RunStyleChecksHandler"
+                commandId="webcat.stylechecking.runStyleChecks"/>
+    </extension>
+
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution
+                locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+            <command
+                    commandId="webcat.stylechecking.runStyleChecks"
+                    label="Run Style Checks"
+                    style="push">
+                <visibleWhen checkEnabled="false">
+                    <with variable="selection">
+                        <iterate ifEmpty="false" operator="or">
+                            <adapt type="org.eclipse.core.resources.IResource"/>
+                        </iterate>
+                    </with>
+                </visibleWhen>
+            </command>
+        </menuContribution>
+        <menuContribution
+                locationURI="popup:#TextEditorContext?after=additions">
+            <command
+                    commandId="webcat.stylechecking.runStyleChecks"
+                    label="Run Style Checks"
+                    style="push">
+            </command>
+        </menuContribution>
+        <menuContribution
+                locationURI="popup:#CompilationUnitEditorContext?after=additions">
+            <command
+                    commandId="webcat.stylechecking.runStyleChecks"
+                    label="Run Style Checks"
+                    style="push">
+            </command>
+        </menuContribution>
+    </extension>
+
+    <extension
+            id="styleViolation"
+            name="Style Violation"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.core.resources.problemmarker"/>
+        <persistent value="true"/>
+    </extension>
+
+    <extension point="org.eclipse.ui.editors.annotationTypes">
+        <type
+                name="webcat.stylechecking.annotation.error"
+                markerType="Web-CAT_Style_Checking.styleViolation"
+                super="org.eclipse.ui.workbench.texteditor.error"
+                markerSeverity="2"/>
+        <type
+                name="webcat.stylechecking.annotation.warning"
+                markerType="Web-CAT_Style_Checking.styleViolation"
+                super="org.eclipse.ui.workbench.texteditor.warning"
+                markerSeverity="1"/>
+        <type
+                name="webcat.stylechecking.annotation.info"
+                markerType="Web-CAT_Style_Checking.styleViolation"
+                super="org.eclipse.ui.workbench.texteditor.info"
+                markerSeverity="0"/>
+    </extension>
+
+    <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+        <specification
+                annotationType="webcat.stylechecking.annotation.warning"
+                label="Style Violation (Warning)"
+                overviewRulerPreferenceKey="webcat.style.warning.overview"
+                overviewRulerPreferenceValue="true"
+                verticalRulerPreferenceKey="webcat.style.warning.verticalruler"
+                verticalRulerPreferenceValue="true"
+                textPreferenceKey="webcat.style.warning.text"
+                textPreferenceValue="true"
+                textStylePreferenceKey="webcat.style.warning.textStyle"
+                textStylePreferenceValue="SQUIGGLES"
+                highlightPreferenceKey="webcat.style.warning.highlight"
+                highlightPreferenceValue="false"
+                colorPreferenceKey="webcat.style.warning.color"
+                colorPreferenceValue="255,165,0"
+                isGoToNextNavigationTargetKey="webcat.style.warning.isGoToNextNavigationTarget"
+                isGoToNextNavigationTargetValue="true"
+                isGoToPreviousNavigationTargetKey="webcat.style.warning.isGoToPreviousNavigationTarget"
+                isGoToPreviousNavigationTargetValue="true"
+                showInNextPrevDropdownToolbarActionKey="webcat.style.warning.showInNextPrevDropdownToolbarAction"
+                showInNextPrevDropdownToolbarActionValue="true"
+                presentationLayer="4"/>
+    </extension>
+
+</plugin>
+
