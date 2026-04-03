@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Web-CAT_Style_Checking
 Bundle-SymbolicName: Web-CAT_Style_Checking;singleton:=true
-Bundle-Version: 1.0.0.beta
+Bundle-Version: 1.0.1.beta
 Bundle-Activator: webcat.stylechecking.Activator
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.swt,
