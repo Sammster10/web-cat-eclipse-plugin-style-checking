@@ -13,7 +13,6 @@ import org.eclipse.core.runtime.*;
 import webcat.stylechecking.Activator;
 import webcat.stylechecking.StyleChecker;
 import webcat.stylechecking.StyleViolation;
-import webcat.stylechecking.StyleViolationSource;
 
 import java.io.File;
 import java.net.URL;
@@ -111,7 +110,6 @@ public class PmdStyleChecker implements StyleChecker {
         List<StyleViolation> violations = new ArrayList<>();
         for (RuleViolation violation : report.getViolations()) {
             violations.add(new StyleViolation(
-                    StyleViolationSource.PMD,
                     violation.getFileId().getAbsolutePath(),
                     violation.getBeginLine(),
                     violation.getEndLine(),

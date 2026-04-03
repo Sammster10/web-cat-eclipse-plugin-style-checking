@@ -8,7 +8,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import webcat.stylechecking.checkers.CheckstyleStyleChecker;
 import webcat.stylechecking.checkers.PmdStyleChecker;
 
 /**
@@ -29,7 +28,6 @@ public class Activator extends AbstractUIPlugin {
         instance = this;
 
         StyleCheckRunner.getInstance().addChecker(new PmdStyleChecker());
-        StyleCheckRunner.getInstance().addChecker(new CheckstyleStyleChecker());
         registerListener();
 
         LOG.log(new Status(IStatus.INFO, PLUGIN_ID, "Plugin started, resource listener registered"));
@@ -50,7 +48,6 @@ public class Activator extends AbstractUIPlugin {
             return;
         }
         StyleCheckRunner.getInstance().addChecker(new PmdStyleChecker());
-        StyleCheckRunner.getInstance().addChecker(new CheckstyleStyleChecker());
         StyleCheckResourceListener listener = new StyleCheckResourceListener();
         ResourcesPlugin.getWorkspace().addResourceChangeListener(
                 listener, IResourceChangeEvent.POST_CHANGE);

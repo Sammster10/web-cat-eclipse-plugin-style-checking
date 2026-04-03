@@ -58,7 +58,4 @@
 	<lib name="xmlresolver-5.3.3.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/pmd/xmlresolver-5.3.3.jar!/"/>
 	</lib>
-	<lib name="checkstyle-10.7.0-all.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/checkstyle/checkstyle-10.7.0-all.jar!/"/>
-	</lib>
 </component>

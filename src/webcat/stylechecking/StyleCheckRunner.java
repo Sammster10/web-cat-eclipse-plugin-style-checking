@@ -89,7 +89,7 @@ public class StyleCheckRunner {
             IFile file = files[0];
             try {
                 IMarker marker = file.createMarker(MARKER_TYPE);
-                marker.setAttribute(IMarker.MESSAGE, "[%s] %s".formatted(violation.source().getDisplayName(), violation.message()));
+                marker.setAttribute(IMarker.MESSAGE, violation.message());
                 marker.setAttribute(IMarker.LINE_NUMBER, violation.beginLine());
                 marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
                 marker.setAttribute(IMarker.SOURCE_ID, Activator.PLUGIN_ID);

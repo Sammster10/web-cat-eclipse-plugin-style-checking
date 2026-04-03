@@ -38,6 +38,5 @@ Bundle-ClassPath: .,
  lib/pmd/slf4j-api-1.7.36.jar,
  lib/pmd/slf4j-simple-1.7.36.jar,
  lib/pmd/xmlresolver-5.3.3.jar,
- lib/pmd/xmlresolver-5.3.3-data.jar,
- lib/checkstyle/checkstyle-10.7.0-all.jar
+ lib/pmd/xmlresolver-5.3.3-data.jar
 
