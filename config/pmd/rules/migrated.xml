@@ -178,20 +178,21 @@
 
     <rule name="IndentationRule"
           language="java"
-          class="edu.vt.cs.webcat.rules.IndentationRule"
+          class="edu.vt.cs.webcat.rules.DynamicIndentationRule"
           message="Indentation violation.">
         <description>
-            Enforces consistent indentation using spaces, with a configurable indent size. Tab characters are not
+            Enforces consistent indentation using spaces. Tab characters are not
             allowed in indentation, and the number of leading spaces on each line must be a multiple of the indent size.
         </description>
         <priority>3</priority>
         <properties>
-            <property name="indentSize" value="4"/>
             <property name="banTabs" value="true"/>
             <property name="tabViolationMessage"
-                      value="Line {0} contains a tab character. Use spaces for indentation instead."/>
+                      value="Line {0} contains a tab character. Use spaces for indentation."/>
             <property name="indentViolationMessage"
-                      value="Line {0} is indented incorrectly. Expected {1} spaces but found {2} instead."/>
+                      value="Line {0} is indented incorrectly. Expected {1} spaces but found {2}."/>
+            <property name="inconsistentFileMessage"
+                      value="This file does not follow a consistent indentation style. Each line must be indented with a number of spaces that is a multiple of the indent size of your choosing. I.e. 2 or 4 spaces per level."/>
         </properties>
     </rule>
 
