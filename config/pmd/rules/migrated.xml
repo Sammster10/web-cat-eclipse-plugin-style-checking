@@ -211,20 +211,20 @@
 
     <rule name="LineLayout"
           language="java"
-          class="edu.vt.cs.webcat.rules.LineLayoutRule"
-          message="Line layout violation">
+          class="edu.vt.cs.webcat.rules.LineLayoutRule">
         <description>
-            Enforces that a right curly brace is alone on its physical line
-            and that each physical line contains at most one statement.
+            Enforces that each physical line contains at most one statement.
         </description>
         <priority>3</priority>
-        <properties>
-            <property name="checkRCurly" value="true"/>
-            <property name="rcurlyMessage"
-                      value="Right curly brace '}' must be alone on its line."/>
-            <property name="oneStatementMessage"
-                      value="Only one statement is allowed per line."/>
-        </properties>
+    </rule>
+
+    <rule name="RightCurlyBlock"
+          language="java"
+          class="edu.vt.cs.webcat.rules.RightCurlyBlockRule">
+        <description>
+            Enforces that a right curly brace is alone on its physical line.
+        </description>
+        <priority>3</priority>
     </rule>
 
     <rule ref="category/java/documentation.xml/CommentContent"
