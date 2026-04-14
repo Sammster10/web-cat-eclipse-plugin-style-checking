@@ -26,7 +26,10 @@ public class StyleCheckRunner {
         return t;
     });
 
-    private final AtomicReference<IResource> pendingRequest = new AtomicReference<>();
+    private record PendingCheck(IResource resource, String sourceCode) {
+    }
+
+    private final AtomicReference<PendingCheck> pendingRequest = new AtomicReference<>();
     private volatile boolean running;
     private final List<StyleChecker> checkers = new ArrayList<>();
 
@@ -42,21 +45,29 @@ public class StyleCheckRunner {
     }
 
     public synchronized void submit(IResource resource) {
-        if (running) {
-            pendingRequest.set(resource);
-            return;
-        }
-        startCheck(resource);
+        submit(resource, null);
     }
 
-    private synchronized void startCheck(IResource resource) {
+    public synchronized void submit(IResource resource, String sourceCode) {
+        if (running) {
+            pendingRequest.set(new PendingCheck(resource, sourceCode));
+            return;
+        }
+        startCheck(resource, sourceCode);
+    }
+
+    private synchronized void startCheck(IResource resource, String sourceCode) {
         running = true;
         executor.submit(() -> {
             try {
                 List<StyleViolation> allViolations = new ArrayList<>();
                 for (StyleChecker checker : checkers) {
                     try {
-                        allViolations.addAll(checker.check(resource));
+                        if (sourceCode != null) {
+                            allViolations.addAll(checker.check(resource, sourceCode));
+                        } else {
+                            allViolations.addAll(checker.check(resource));
+                        }
                     } catch (Exception e) {
                         LOG.log(new Status(
                                 IStatus.ERROR,
@@ -127,9 +138,9 @@ public class StyleCheckRunner {
 
     private synchronized void onCheckComplete() {
         running = false;
-        IResource next = pendingRequest.getAndSet(null);
+        PendingCheck next = pendingRequest.getAndSet(null);
         if (next != null) {
-            startCheck(next);
+            startCheck(next.resource(), next.sourceCode());
         }
     }
 

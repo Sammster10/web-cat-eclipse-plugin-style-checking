@@ -17,15 +17,15 @@ import webcat.stylechecking.StyleViolation;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * A style checker that uses PMD to analyze Java files for style violations.
- */
 public class PmdStyleChecker implements StyleChecker {
 
     private static final ILog LOG = Platform.getLog(PmdStyleChecker.class);
@@ -34,6 +34,11 @@ public class PmdStyleChecker implements StyleChecker {
 
     @Override
     public List<StyleViolation> check(IResource resource) throws Exception {
+        return check(resource, null);
+    }
+
+    @Override
+    public List<StyleViolation> check(IResource resource, String sourceCode) throws Exception {
         List<IFile> javaFiles = collectJavaFiles(resource);
         if (javaFiles.isEmpty()) {
             return List.of();
@@ -60,6 +65,7 @@ public class PmdStyleChecker implements StyleChecker {
             customJarUrls = findCustomJarsInDir(defaultLibDir);
         }
 
+        Map<Path, Path> tempFileMap = new HashMap<>();
         URLClassLoader customClassLoader = null;
         try {
             PMDConfiguration config = new PMDConfiguration();
@@ -94,23 +100,44 @@ public class PmdStyleChecker implements StyleChecker {
                     analysis.addRuleSet(ruleSet);
                 }
                 for (IFile file : javaFiles) {
-                    analysis.files().addFile(file.getLocation().toFile().toPath());
+                    Path originalPath = file.getLocation().toFile().toPath();
+                    if (sourceCode != null && javaFiles.size() == 1) {
+                        Path tempFile = Files.createTempFile("pmd-live-", ".java");
+                        Files.writeString(tempFile, sourceCode, StandardCharsets.UTF_8);
+                        tempFileMap.put(tempFile, originalPath);
+                        analysis.files().addFile(tempFile);
+                    } else {
+                        analysis.files().addFile(originalPath);
+                    }
                 }
                 Report report = analysis.performAnalysisAndCollectReport();
-                return toViolations(report);
+                return toViolations(report, tempFileMap);
             }
         } finally {
             if (customClassLoader != null) {
                 customClassLoader.close();
             }
+            for (Path tempFile : tempFileMap.keySet()) {
+                try {
+                    Files.deleteIfExists(tempFile);
+                } catch (Exception ignored) {
+                }
+            }
         }
     }
 
-    private List<StyleViolation> toViolations(Report report) {
+    private List<StyleViolation> toViolations(Report report, Map<Path, Path> tempFileMap) {
         List<StyleViolation> violations = new ArrayList<>();
         for (RuleViolation violation : report.getViolations()) {
+            String filePath = violation.getFileId().getAbsolutePath();
+            for (Map.Entry<Path, Path> entry : tempFileMap.entrySet()) {
+                if (filePath.equals(entry.getKey().toAbsolutePath().toString())) {
+                    filePath = entry.getValue().toAbsolutePath().toString();
+                    break;
+                }
+            }
             violations.add(new StyleViolation(
-                    violation.getFileId().getAbsolutePath(),
+                    filePath,
                     violation.getBeginLine(),
                     violation.getEndLine(),
                     violation.getDescription()

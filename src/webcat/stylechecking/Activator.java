@@ -6,13 +6,14 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import webcat.stylechecking.checkers.PmdStyleChecker;
 
-/**
- * Entry point for the plugin.
- */
 public class Activator extends AbstractUIPlugin {
 
     public static final String PLUGIN_ID = "Web-CAT_Style_Checking";
@@ -21,6 +22,7 @@ public class Activator extends AbstractUIPlugin {
     private static Activator instance;
     private static volatile boolean listenerRegistered = false;
     private StyleCheckResourceListener resourceListener;
+    private DocumentChangeListener documentChangeListener;
 
     @Override
     public void start(BundleContext context) throws Exception {
@@ -29,6 +31,7 @@ public class Activator extends AbstractUIPlugin {
 
         StyleCheckRunner.getInstance().addChecker(new PmdStyleChecker());
         registerListener();
+        registerDocumentChangeListener();
 
         LOG.log(new Status(IStatus.INFO, PLUGIN_ID, "Plugin started, resource listener registered"));
     }
@@ -41,6 +44,19 @@ public class Activator extends AbstractUIPlugin {
         ResourcesPlugin.getWorkspace().addResourceChangeListener(
                 resourceListener, IResourceChangeEvent.POST_CHANGE);
         listenerRegistered = true;
+    }
+
+    private void registerDocumentChangeListener() {
+        documentChangeListener = new DocumentChangeListener();
+        IWorkbench workbench = PlatformUI.getWorkbench();
+        workbench.getDisplay().asyncExec(() -> {
+            for (IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
+                for (IWorkbenchPage page : window.getPages()) {
+                    page.addPartListener(documentChangeListener);
+                    documentChangeListener.attachToExistingEditors(page);
+                }
+            }
+        });
     }
 
     static synchronized void ensureListenerRegistered() {
@@ -59,6 +75,15 @@ public class Activator extends AbstractUIPlugin {
     public void stop(BundleContext context) throws Exception {
         if (resourceListener != null) {
             ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceListener);
+        }
+        if (documentChangeListener != null) {
+            IWorkbench workbench = PlatformUI.getWorkbench();
+            for (IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
+                for (IWorkbenchPage page : window.getPages()) {
+                    page.removePartListener(documentChangeListener);
+                }
+            }
+            documentChangeListener.shutdown();
         }
         StyleCheckRunner.getInstance().shutdown();
         listenerRegistered = false;
