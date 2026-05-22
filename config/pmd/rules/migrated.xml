@@ -173,7 +173,7 @@
                       value="Javadoc for {0} ''{1}'' has an empty @version tag."/>
             <property name="missingFieldJavadocMessage"
                       value="Non-private field(s) ''{0}'' must have Javadoc."/>
-            <property name="allowedDuplicateTags" value="author"/>
+            <property name="allowedDuplicateTags" value="author,version"/>
         </properties>
     </rule>
 
