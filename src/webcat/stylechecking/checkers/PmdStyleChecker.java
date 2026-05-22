@@ -1,7 +1,12 @@
 package webcat.stylechecking.checkers;
 
+import com.google.common.base.Preconditions;
 import net.sourceforge.pmd.PMDConfiguration;
 import net.sourceforge.pmd.PmdAnalysis;
+import net.sourceforge.pmd.lang.LanguageRegistry;
+import net.sourceforge.pmd.lang.LanguageVersion;
+import net.sourceforge.pmd.lang.document.FileId;
+import net.sourceforge.pmd.lang.document.TextFile;
 import net.sourceforge.pmd.lang.rule.RuleSet;
 import net.sourceforge.pmd.lang.rule.RuleSetLoader;
 import net.sourceforge.pmd.reporting.Report;
@@ -17,14 +22,12 @@ import webcat.stylechecking.StyleViolation;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class PmdStyleChecker implements StyleChecker {
 
@@ -55,8 +58,8 @@ public class PmdStyleChecker implements StyleChecker {
             LOG.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "No PMD rulesets found."));
             return List.of();
         }
-        List<URL> customJarUrls;
 
+        List<URL> customJarUrls;
         Path defaultLibDir = resolvePluginPath(LIB_DIR);
         if (defaultLibDir == null) {
             LOG.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "No custom PMD lib directory found."));
@@ -65,7 +68,6 @@ public class PmdStyleChecker implements StyleChecker {
             customJarUrls = findCustomJarsInDir(defaultLibDir);
         }
 
-        Map<Path, Path> tempFileMap = new HashMap<>();
         URLClassLoader customClassLoader = null;
         try {
             PMDConfiguration config = new PMDConfiguration();
@@ -77,8 +79,10 @@ public class PmdStyleChecker implements StyleChecker {
             }
 
             List<RuleSet> ruleSets = new ArrayList<>();
+
             try (PmdAnalysis analysis = PmdAnalysis.create(config)) {
                 RuleSetLoader ruleSetLoader = analysis.newRuleSetLoader();
+
                 if (customClassLoader != null) {
                     ruleSetLoader.loadResourcesWith(customClassLoader);
                 }
@@ -99,55 +103,64 @@ public class PmdStyleChecker implements StyleChecker {
                 for (RuleSet ruleSet : ruleSets) {
                     analysis.addRuleSet(ruleSet);
                 }
+
+                LanguageVersion javaLanguageVersion = Objects.requireNonNull(LanguageRegistry.PMD.getLanguageById("java")).getDefaultVersion();
+
                 for (IFile file : javaFiles) {
-                    Path originalPath = file.getLocation().toFile().toPath();
+                    Path originalPath = realPathFor(file);
+
                     if (sourceCode != null && javaFiles.size() == 1) {
-                        Path tempFile = Files.createTempFile("pmd-live-", ".java");
-                        Files.writeString(tempFile, sourceCode, StandardCharsets.UTF_8);
-                        tempFileMap.put(tempFile, originalPath);
-                        analysis.files().addFile(tempFile);
+                        TextFile textFile = TextFile.forCharSeq(
+                                sourceCode,
+                                FileId.fromPathLikeString(originalPath.toAbsolutePath().toString()),
+                                javaLanguageVersion
+                        );
+
+                        analysis.files().addFile(textFile);
                     } else {
                         analysis.files().addFile(originalPath);
                     }
                 }
+
                 Report report = analysis.performAnalysisAndCollectReport();
-                return toViolations(report, tempFileMap);
+                return toViolations(report);
             }
         } finally {
             if (customClassLoader != null) {
                 customClassLoader.close();
             }
-            for (Path tempFile : tempFileMap.keySet()) {
-                try {
-                    Files.deleteIfExists(tempFile);
-                } catch (Exception ignored) {
-                }
-            }
         }
     }
 
-    private List<StyleViolation> toViolations(Report report, Map<Path, Path> tempFileMap) {
+    private Path realPathFor(IFile file) {
+        IPath location = file.getLocation();
+
+        if (location == null) {
+            location = file.getRawLocation();
+        }
+
+        Preconditions.checkNotNull(location, "Could not resolve filesystem path for %s", file.getFullPath());
+        return location.toFile().toPath();
+    }
+
+    private List<StyleViolation> toViolations(Report report) {
         List<StyleViolation> violations = new ArrayList<>();
+
         for (RuleViolation violation : report.getViolations()) {
-            String filePath = violation.getFileId().getAbsolutePath();
-            for (Map.Entry<Path, Path> entry : tempFileMap.entrySet()) {
-                if (filePath.equals(entry.getKey().toAbsolutePath().toString())) {
-                    filePath = entry.getValue().toAbsolutePath().toString();
-                    break;
-                }
-            }
             violations.add(new StyleViolation(
-                    filePath,
+                    violation.getFileId().getAbsolutePath(),
                     violation.getBeginLine(),
                     violation.getEndLine(),
                     violation.getDescription()
             ));
         }
+
         return violations;
     }
 
     private List<IFile> collectJavaFiles(IResource resource) throws CoreException {
         List<IFile> files = new ArrayList<>();
+
         if (resource instanceof IFile file && file.getName().endsWith(".java")) {
             files.add(file);
         } else {
@@ -158,14 +171,17 @@ public class PmdStyleChecker implements StyleChecker {
                 return true;
             });
         }
+
         return files;
     }
 
     private List<Path> findRulesetsInDir(Path rulesDir) {
         List<Path> rulesets = new ArrayList<>();
+
         if (!Files.isDirectory(rulesDir)) {
             return rulesets;
         }
+
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(rulesDir, "*.xml")) {
             for (Path entry : stream) {
                 rulesets.add(entry);
@@ -173,14 +189,17 @@ public class PmdStyleChecker implements StyleChecker {
         } catch (Exception e) {
             LOG.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed to scan rules directory: %s".formatted(rulesDir), e));
         }
+
         return rulesets;
     }
 
     private List<URL> findCustomJarsInDir(Path libDir) {
         List<URL> urls = new ArrayList<>();
+
         if (!Files.isDirectory(libDir)) {
             return urls;
         }
+
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(libDir, "*.jar")) {
             for (Path entry : stream) {
                 urls.add(entry.toUri().toURL());
@@ -188,6 +207,7 @@ public class PmdStyleChecker implements StyleChecker {
         } catch (Exception e) {
             LOG.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed to scan lib directory: %s".formatted(libDir), e));
         }
+
         return urls;
     }
 
@@ -197,6 +217,7 @@ public class PmdStyleChecker implements StyleChecker {
             if (entry == null) {
                 return null;
             }
+
             File file = new File(FileLocator.toFileURL(entry).getPath());
             return file.toPath();
         } catch (Exception e) {
@@ -205,4 +226,3 @@ public class PmdStyleChecker implements StyleChecker {
         }
     }
 }
-

@@ -18,7 +18,7 @@
 
         <properties>
             <property name="maxLength" value="80"/>
-            <property name="filePattern" value=".*Test"/>
+            <property name="filePattern" value=".*Test\.java$"/>
             <property name="filePatternMaxLength" value="0"/> <!-- no limit in test files -->
             <property name="ignorePattern" value="^ *\* *[^ ]+$"/>
             <property name="message"
