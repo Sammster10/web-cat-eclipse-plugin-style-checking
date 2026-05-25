@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="Unnecessary Code Rules (JavaTddPlugin version)"
          xmlns="http://pmd.sf.net/ruleset/2.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 >
 
     <description>
@@ -18,8 +17,6 @@
     <rule ref="category/java/codestyle.xml/UnnecessaryReturn"
           message="Including a return statement at the end of a method with
     a void return type is unnecessary."/>
-
-    <!--  <rule ref="category/java/codestyle.xml/UnnecessaryModifier" />-->
 
     <!-- rule ref="rulesets/java/unnecessary.xml/UselessOverridingMethod"
       message="The body of this overriding method does not add any

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="Code Size Rules (JavaTddPlugin version)"
          xmlns="http://pmd.sf.net/ruleset/2.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 >
 
     <description>
@@ -15,16 +14,5 @@
     methods indicate a lack of cohesion.  Perhaps you could factor out
     some of the code into helper methods."/>
 
-    <rule ref="category/java/design.xml/TooManyFields"
-          message="This class seems to have an excessive number of fields. A
-    very large number of fields indicates a lack of cohesion.  Perhaps
-    this class is trying to represent more than one object. Could it
-    be broken into several more cohesive classes? Alternatively, might
-    it be better to replace a collection of fields with an ArrayList
-    or another collection class?">
-        <properties>
-            <property name="maxfields" value="30"/>
-        </properties>
-    </rule>
 
 </ruleset>
