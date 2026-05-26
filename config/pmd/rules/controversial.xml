@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="Controversial Rules (JavaTddPlugin version)"
          xmlns="http://pmd.sf.net/ruleset/2.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 >
 
     <description>
@@ -17,9 +16,9 @@
       class should define at least one constructor."/>
      -->
 
-    <rule ref="category/java/codestyle.xml/UselessParentheses"
-          message="The parentheses around your return value are not
-    necessary. You should probably remove them to avoid confusion."/>
+    <!--    <rule ref="category/java/codestyle.xml/UselessParentheses"-->
+    <!--          message="The parentheses around your return value are not-->
+    <!--    necessary. You should probably remove them to avoid confusion."/>-->
 
     <rule ref="category/java/errorprone.xml/SuspiciousOctalEscape"/>
     <rule ref="category/java/errorprone.xml/AvoidAccessibilityAlteration"/>
