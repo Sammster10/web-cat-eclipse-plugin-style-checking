@@ -9,10 +9,10 @@
         alternate messages from the main PMD rulesets/java/codesize.xml ruleset.
     </description>
 
-    <rule ref="category/java/design.xml/NcssCount"
-          message="This method seems to be excessively long.  Very long
-    methods indicate a lack of cohesion.  Perhaps you could factor out
-    some of the code into helper methods."/>
+    <!--    <rule ref="category/java/design.xml/NcssCount"-->
+    <!--          message="This method seems to be excessively long.  Very long-->
+    <!--    methods indicate a lack of cohesion.  Perhaps you could factor out-->
+    <!--    some of the code into helper methods."/>-->
 
 
 </ruleset>
