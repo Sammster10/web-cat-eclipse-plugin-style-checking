@@ -99,7 +99,7 @@
     </rule>
 
     <rule ref="category/java/codestyle.xml/UnnecessarySemicolon"
-          message="This statement is just a '';'' and, therefore, does nothing.  You may have added a '';'' in an inappropriate location (like after an if or a for loop). See if you are missing code or just delete the extra '';''."
+          message="This statement is just a '';'' and, therefore, does nothing. You may have added a '';'' in an inappropriate location (like after an if or a for loop). See if you are missing code or just delete the extra '';''."
     />
 
     <rule ref="category/java/errorprone.xml/UseEqualsToCompareStrings"

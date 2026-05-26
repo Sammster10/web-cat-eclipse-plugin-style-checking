@@ -11,7 +11,7 @@
 
     <rule ref="category/java/errorprone.xml/UnnecessaryConversionTemporary"
           message="Do not allocate a new object to convert a primitive
-    value to a string.  For example, use Integer.toString(x) instead
+    value to a string. For example, use Integer.toString(x) instead
     of new Integer(x).toString()."/>
 
     <rule ref="category/java/codestyle.xml/UnnecessaryReturn"
