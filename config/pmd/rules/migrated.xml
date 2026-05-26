@@ -340,8 +340,12 @@
     </rule>
 
     <rule ref="category/java/errorprone.xml/AssignmentInOperand"
-          message="Avoid assigning values to variables as part of a larger expression. It is difficult to read correctly and may cause confusion. Make each assignment a separate statement."/>
-    />
+          message="Avoid assigning values to variables as part of a larger expression. It is difficult to read correctly and may cause confusion. Make each assignment a separate statement."
+    >
+        <properties>
+            <property name="allowIncrementDecrement" value="true"/>
+        </properties>
+    </rule>
 
     <rule ref="category/java/bestpractices.xml/OneDeclarationPerLine"
           message="To make the code more readable, place each variable or field in its own declaration on a separate line."
