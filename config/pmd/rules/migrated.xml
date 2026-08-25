@@ -234,7 +234,8 @@
         <description>Enforce that a right curly brace is alone on its physical line.</description>
         <priority>3</priority>
         <properties>
-            <property name="allowSameLineBraceTransitions" value="true"/>
+            <!-- Setting this to true will allow cases such as `} else if (a < b) {`. it will enable other cases as well such as ` } catch (Exception e) {`, `} finally {`, and `} while (a < b)` in the case of do-while loops -->
+            <property name="allowSameLineBraceTransitions" value="false"/>
         </properties>
     </rule>
 
